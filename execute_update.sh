@@ -3,7 +3,7 @@
 SRC_DIR="/home/nvidia/nx_update"
 DEST_DIR="/home/nvidia"
 FIRMWARE_DIR="/home/nvidia/nx_update/firmware"
-BACKUP_CONFIG_DIR="$SRC_DIR/config"
+BACKUP_CONFIG_DIR="/home/nvidia/nx_update/config"
 
 # 检查源文件夹是否存在
 if [ ! -d "$SRC_DIR" ]; then
@@ -31,8 +31,12 @@ if [ ! -d "$NEW_FLIGHT_LOGS_DIR" ]; then
     mkdir "$NEW_FLIGHT_LOGS_DIR"
 fi
 
+if [ ! -d "$FIRMWARE_DIR" ]; then
+    echo "Creating $FIRMWARE_DIR directory..."
+    mkdir "$FIRMWARE_DIR"
+fi
 # 解压当前文件夹内的 nx_ros_repo.zip 到 /home/nvidia/nx_update/firmware
-ZIP_FILE="./nx_ros_repo.zip"
+ZIP_FILE="/home/nvidia/nx_update/nx_ros_repo.zip"
 if [ -f "$ZIP_FILE" ]; then
     echo "Unzipping $ZIP_FILE to $FIRMWARE_DIR..."
     unzip -q -o "$ZIP_FILE" -d "$FIRMWARE_DIR"
@@ -58,16 +62,6 @@ CURRENT_TIME=$(date +"%Y%m%d_%H%M%S")
 if [ -d "$FIRMWARE_DIR" ]; then
     echo "Backing up existing $FIRMWARE_DIR to ${FIRMWARE_DIR}_bak_$CURRENT_TIME..."
     mv "$FIRMWARE_DIR" "${FIRMWARE_DIR}_bak_$CURRENT_TIME"
-fi
-
-
-
-# 复制备份的 uav_id_config.yaml 文件到新的 nx_ros_repo 目录
-BACKUP_UAV_ID_CONFIG_FILE="$BACKUP_CONFIG_DIR/uav_id_config.yaml"
-NEW_UAV_ID_CONFIG_DIR="$FIRMWARE_DIR/src/cyber/launch_config/config"
-if [ -f "$BACKUP_UAV_ID_CONFIG_FILE" ]; then
-    echo "Copying $BACKUP_UAV_ID_CONFIG_FILE to $NEW_UAV_ID_CONFIG_DIR..."
-    cp "$BACKUP_UAV_ID_CONFIG_FILE" "$NEW_UAV_ID_CONFIG_DIR/"
 fi
 
 # 复制 /home/nvidia/nx_update/script/ 的内容到 /home/nvidia/
