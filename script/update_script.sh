@@ -26,7 +26,7 @@ if [ -f "$ZIP_FILE" ]; then
     mkdir -p "$DEST_DIR"
     
     # 解压 zip 文件到目标文件夹
-    unzip -o "$ZIP_FILE" -d "$DEST_DIR"
+    unzip -q -d "$DEST_DIR" "$ZIP_FILE" 
     
     # 检查解压后的脚本是否存在
     if [ -f "$DEST_DIR/$SCRIPT_NAME" ]; then
