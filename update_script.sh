@@ -8,8 +8,8 @@ fi
 
 # 设置文件路径
 ZIP_FILE_SUFFIX="$1"
-ZIP_FILE="/home/nvidia/update_${ZIP_FILE_SUFFIX}.zip"
-DEST_DIR="/home/nvidia/update"
+ZIP_FILE="/home/nvidia/nx_update_${ZIP_FILE_SUFFIX}.zip"
+DEST_DIR="/home/nvidia/nx_update"
 SCRIPT_NAME="execute_update.sh"
 
 # 如果 update 文件夹存在，则删除它
