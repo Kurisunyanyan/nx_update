@@ -3,6 +3,11 @@ drone_namespace     = @settings["drone_namespace"]
 uav_id              = @settings["uav_id"]
 min_airspeed        = @settings["min_airspeed"]
 max_airspeed        = @settings["max_airspeed"]
+
+alt_low             = @settings["alt_low"]
+alt_high            = @settings["alt_high"]
+alt_constrain       = @settings["alt_constrain"]
+
 accept_radius       = @settings["accept_radius"]
 loiter_time         = @settings["loiter_time"]
 heading_error       = @settings["heading_error"]
@@ -11,9 +16,6 @@ fcu_url             = @settings["fcu_url"]
 mission_alt         = @settings["mission_alt"]
 takeoff_alt         = @settings["takeoff_alt"]
 
-alt_low             = @settings["alt_low"]
-alt_high            = @settings["alt_high"]
-alt_constrain       = @settings["alt_constrain"]
 
 debug_mode          = @settings["debug_mode"] == "true"
 
@@ -31,7 +33,7 @@ attach: false
 root: ./
 pre_window: source ~/.bashrc
 windows:
-<% if hitl %>·
+<% if hitl %>
   # - core:
   #     layout: tiled
   #     panes:
@@ -39,26 +41,6 @@ windows:
   - comm:
       layout: tiled
       panes:
-<% if not debug_mode %>
-        - sleep 1 && roslaunch launch_config communication_all_serial.launch 
-          ns:=<%= drone_namespace %> 
-          dl_p:=/dev/ttyTHS0 dl_b:=115200 
-          fcu_p:=/dev/ttyTHS1 fcu_b:=115200 
-          aspd_max:=<%= max_airspeed %> 
-          aspd_min:=<%= min_airspeed %> 
-          alt_high:=<%= alt_high %>  
-          alt_low:=<%= alt_low %>  
-          alt_constrain:=<%= alt_constrain %>   
-          gcs_l:=<%= gcs_lost %> 
-          debug_en:=<%= debug_info_enable %>
-          save_log:=<%= save_log %> 
-          w_fc:=1 
-          ex_fc:=0 
-          pub_s:=1 
-          pub_m:=1 
-          debug_mode:=0
-<%- end %>
-
 <% if debug_mode %>
         - stdbuf -oL roslaunch launch_config communication_all_serial.launch 
           ns:=<%= drone_namespace %> 
@@ -80,6 +62,28 @@ windows:
           pub_m:=1 
           debug_mode:=1 
           2>&1 | tee ~/logs/comm_$(date +%Y-%m-%d-%H-%M-%S).log
+
+<%- end %>
+
+<% if not debug_mode %>
+
+        - sleep 1 && roslaunch launch_config communication_all_serial.launch 
+          ns:=<%= drone_namespace %> 
+          dl_p:=/dev/ttyTHS0 dl_b:=115200 
+          fcu_p:=/dev/ttyTHS1 fcu_b:=115200 
+          aspd_max:=<%= max_airspeed %> 
+          aspd_min:=<%= min_airspeed %> 
+          alt_high:=<%= alt_high %>  
+          alt_low:=<%= alt_low %>  
+          alt_constrain:=<%= alt_constrain %>   
+          gcs_l:=<%= gcs_lost %> 
+          debug_en:=<%= debug_info_enable %>
+          save_log:=<%= save_log %> 
+          w_fc:=1 
+          ex_fc:=0 
+          pub_s:=1 
+          pub_m:=1 
+          debug_mode:=0
 <%- end %>
 
   - mission:
