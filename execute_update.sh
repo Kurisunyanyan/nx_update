@@ -1,13 +1,15 @@
 #!/bin/zsh
 
 # 源文件夹
-SRC_DIR="/home/nvidia/update"
+SRC_DIR="/home/nvidia/nx_update"
 # 目标文件夹
 DEST_DIR="/home/nvidia"
 # 压缩文件
 ZIP_FILE="$SRC_DIR/nx_ros_repo.zip"
 # 新的文件夹
 NEW_DIR="/home/nvidia/nx_ros_repo"
+# 备份文件夹
+BACKUP_CONFIG_DIR="$SRC_DIR/config"
 
 # 检查源文件夹是否存在
 if [ ! -d "$SRC_DIR" ]; then
@@ -35,13 +37,25 @@ if [ ! -d "$NEW_FLIGHT_LOGS_DIR" ]; then
     mkdir "$NEW_FLIGHT_LOGS_DIR"
 fi
 
-# 解压 nx_ros_repo.zip 到 /home/nvidia/update
+# 解压 nx_ros_repo.zip 到 /home/nvidia/nx_update
 if [ -f "$ZIP_FILE" ]; then
     echo "Unzipping $ZIP_FILE to $SRC_DIR..."
     unzip -q -o "$ZIP_FILE" -d "$SRC_DIR"
 else
     echo "Error: $ZIP_FILE does not exist."
     exit 1
+fi
+
+# 创建备份配置文件夹
+if [ ! -d "$BACKUP_CONFIG_DIR" ]; then
+    mkdir -p "$BACKUP_CONFIG_DIR"
+fi
+
+# 备份 uav_id_config.yaml 文件到 /home/nvidia/nx_update/config/
+UAV_ID_CONFIG_FILE="$NEW_DIR/src/cyber/launch_config/config/uav_id_config.yaml"
+if [ -f "$UAV_ID_CONFIG_FILE" ]; then
+    echo "Backing up $UAV_ID_CONFIG_FILE to $BACKUP_CONFIG_DIR..."
+    cp "$UAV_ID_CONFIG_FILE" "$BACKUP_CONFIG_DIR/"
 fi
 
 # 备份原有的 nx_ros_repo 文件夹
@@ -51,16 +65,18 @@ if [ -d "$NEW_DIR" ]; then
     mv "$NEW_DIR" "${NEW_DIR}_bak_$CURRENT_TIME"
 fi
 
-# 移动 /home/nvidia/update 文件夹内的所有内容到 /home/nvidia/
+# 移动 /home/nvidia/nx_update 文件夹内的所有内容到 /home/nvidia/
 for file in "$SRC_DIR"/*; do
     echo "Moving $file to $DEST_DIR..."
     mv "$file" "$DEST_DIR"
 done
 
-# 移动备份的 uav_id_config.yaml 文件到新的 nx_ros_repo 目录
-if [ -f "${NEW_DIR}_bak_$CURRENT_TIME/src/cyber/launch_config/config/uav_id_config.yaml" ]; then
-    echo "Moving ${NEW_DIR}_bak_$CURRENT_TIME/src/cyber/launch_config/config/uav_id_config.yaml to $NEW_DIR/src/cyber/launch_config/config/..."
-    mv "${NEW_DIR}_bak_$CURRENT_TIME/src/cyber/launch_config/config/uav_id_config.yaml" "$NEW_DIR/src/cyber/launch_config/config/"
+# 复制备份的 uav_id_config.yaml 文件到新的 nx_ros_repo 目录
+BACKUP_UAV_ID_CONFIG_FILE="$BACKUP_CONFIG_DIR/uav_id_config.yaml"
+NEW_UAV_ID_CONFIG_DIR="$NEW_DIR/src/cyber/launch_config/config"
+if [ -f "$BACKUP_UAV_ID_CONFIG_FILE" ]; then
+    echo "Copying $BACKUP_UAV_ID_CONFIG_FILE to $NEW_UAV_ID_CONFIG_DIR..."
+    cp "$BACKUP_UAV_ID_CONFIG_FILE" "$NEW_UAV_ID_CONFIG_DIR/"
 fi
 
 echo "Setup complete."
