@@ -2,7 +2,8 @@
 
 SRC_DIR="/home/nvidia/nx_update"
 DEST_DIR="/home/nvidia"
-FIRMWARE_DIR="/home/nvidia/nx_update/firmware"
+FIRMWARE_UPDATE_DIR="/home/nvidia/nx_update/firmware"
+FIRMWARE_DIR="/home/nvidia/nx_ros_repo"
 BACKUP_CONFIG_DIR="/home/nvidia/nx_update/config"
 
 # 检查源文件夹是否存在
@@ -31,15 +32,15 @@ if [ ! -d "$NEW_FLIGHT_LOGS_DIR" ]; then
     mkdir "$NEW_FLIGHT_LOGS_DIR"
 fi
 
-if [ ! -d "$FIRMWARE_DIR" ]; then
-    echo "Creating $FIRMWARE_DIR directory..."
-    mkdir "$FIRMWARE_DIR"
+if [ ! -d "$FIRMWARE_UPDATE_DIR" ]; then
+    echo "Creating $FIRMWARE_UPDATE_DIR directory..."
+    mkdir "$FIRMWARE_UPDATE_DIR"
 fi
 # 解压当前文件夹内的 nx_ros_repo.zip 到 /home/nvidia/nx_update/firmware
 ZIP_FILE="/home/nvidia/nx_update/nx_ros_repo.zip"
 if [ -f "$ZIP_FILE" ]; then
-    echo "Unzipping $ZIP_FILE to $FIRMWARE_DIR..."
-    unzip -q -o "$ZIP_FILE" -d "$FIRMWARE_DIR"
+    echo "Unzipping $ZIP_FILE to $FIRMWARE_UPDATE_DIR..."
+    unzip -q -o "$ZIP_FILE" -d "$FIRMWARE_UPDATE_DIR"
 else
     echo "Error: $ZIP_FILE does not exist."
     exit 1
