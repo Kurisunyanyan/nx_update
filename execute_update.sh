@@ -4,10 +4,8 @@
 SRC_DIR="/home/nvidia/nx_update"
 # 目标文件夹
 DEST_DIR="/home/nvidia"
-# 压缩文件
-ZIP_FILE="$SRC_DIR/nx_ros_repo.zip"
 # 新的文件夹
-NEW_DIR="/home/nvidia/nx_ros_repo"
+NEW_DIR="$SRC_DIR/nx_ros_repo"
 # 备份文件夹
 BACKUP_CONFIG_DIR="$SRC_DIR/config"
 
@@ -37,10 +35,11 @@ if [ ! -d "$NEW_FLIGHT_LOGS_DIR" ]; then
     mkdir "$NEW_FLIGHT_LOGS_DIR"
 fi
 
-# 解压 nx_ros_repo.zip 到 /home/nvidia/nx_update
+# 解压当前文件夹内的 nx_ros_repo.zip 到 /home/nvidia/nx_update/nx_ros_repo
+ZIP_FILE="./nx_ros_repo.zip"
 if [ -f "$ZIP_FILE" ]; then
-    echo "Unzipping $ZIP_FILE to $SRC_DIR..."
-    unzip -q -o "$ZIP_FILE" -d "$SRC_DIR"
+    echo "Unzipping $ZIP_FILE to $NEW_DIR..."
+    unzip -q -o "$ZIP_FILE" -d "$NEW_DIR"
 else
     echo "Error: $ZIP_FILE does not exist."
     exit 1
@@ -65,11 +64,7 @@ if [ -d "$NEW_DIR" ]; then
     mv "$NEW_DIR" "${NEW_DIR}_bak_$CURRENT_TIME"
 fi
 
-# 移动 /home/nvidia/nx_update 文件夹内的所有内容到 /home/nvidia/
-for file in "$SRC_DIR"/*; do
-    echo "Moving $file to $DEST_DIR..."
-    mv "$file" "$DEST_DIR"
-done
+
 
 # 复制备份的 uav_id_config.yaml 文件到新的 nx_ros_repo 目录
 BACKUP_UAV_ID_CONFIG_FILE="$BACKUP_CONFIG_DIR/uav_id_config.yaml"
@@ -78,5 +73,11 @@ if [ -f "$BACKUP_UAV_ID_CONFIG_FILE" ]; then
     echo "Copying $BACKUP_UAV_ID_CONFIG_FILE to $NEW_UAV_ID_CONFIG_DIR..."
     cp "$BACKUP_UAV_ID_CONFIG_FILE" "$NEW_UAV_ID_CONFIG_DIR/"
 fi
+
+# 移动 /home/nvidia/nx_update 文件夹内的所有内容到 /home/nvidia/
+for file in "$SRC_DIR"/*; do
+    echo "Moving $file to $DEST_DIR..."
+    mv "$file" "$DEST_DIR"
+done
 
 echo "Setup complete."
