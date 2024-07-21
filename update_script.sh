@@ -1,7 +1,14 @@
 #!/bin/zsh
 
+# 检查是否提供了压缩包文件名后一半作为参数
+if [ -z "$1" ]; then
+    echo "Usage: $0 <zip_file_suffix>"
+    exit 1
+fi
+
 # 设置文件路径
-ZIP_FILE="/home/nvidia/update.zip"
+ZIP_FILE_SUFFIX="$1"
+ZIP_FILE="/home/nvidia/update_${ZIP_FILE_SUFFIX}.zip"
 DEST_DIR="/home/nvidia/update"
 SCRIPT_NAME="execute_update.sh"
 
