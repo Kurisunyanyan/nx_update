@@ -50,9 +50,9 @@ windows:
           fcu_b:=115200 
           aspd_max:=<%= max_airspeed %> 
           aspd_min:=<%= min_airspeed %> 
-          alt_high:=1600 
-          alt_low:=1450 
-          alt_constrain:=0 
+          alt_high:=<%= alt_high %>  
+          alt_low:=<%= alt_low %>  
+          alt_constrain:=<%= alt_constrain %>
           gcs_l:=15 
           debug_en:=1 
           save_log:=0 

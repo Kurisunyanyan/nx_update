@@ -80,7 +80,7 @@ command = (
     f"drone_namespace={ns} uav_id={args.uav_id} "
     f"hitl={bool2str(args.hitl_test)} "
     f"min_airspeed={args.min_airspeed} max_airspeed={args.max_airspeed} "
-    f"alt_low={args.alt_low} alt_high={args.alt_high} alt_constrain={args.alt_constrain}"
+    f"alt_low={args.alt_low} alt_high={args.alt_high} alt_constrain={args.alt_constrain} "
     f"accept_radius={args.accept_radius} "
     f"loiter_time={args.loiter_time} "
     f"gcs_lost={args.gcs_lost} "
